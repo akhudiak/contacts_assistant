@@ -4,11 +4,9 @@ contacts = {}
 
 def input_error(func):
 
-    def wrapper(*args):
+    def wrapper(args):
         try:
-            return func(*args)
-        except KeyError:
-            return "Wrong command! Try again."
+            return func(args)
         except IndexError:
             return "Give me all needed data."
         except ValueError:
@@ -17,12 +15,12 @@ def input_error(func):
     return wrapper
 
 
-def hello(*args):
+def hello(args):
     return "How can I help you?"
 
 
 @input_error
-def add(*args):
+def add(args):
 
     name = args[0]
     
@@ -36,7 +34,7 @@ def add(*args):
 
 
 @input_error
-def change(*args):
+def change(args):
 
     name = args[0]
 
@@ -50,18 +48,22 @@ def change(*args):
 
 
 @input_error
-def phone(*args):
+def phone(args):
 
     name = args[0]
 
     if name not in contacts:
         raise ValueError
 
-    return f"Name: {name}. Phone number: {contacts[name]}"
+    return f"{name}: {contacts[name]}"
 
 
-def show_all(*args):
-    pass
+def show_all(args):
+    return "\n".join([f"{name}: {phone}" for name, phone in contacts.items()])
+
+
+def no_command(args):
+    return "Wrong command! Try again."
 
 
 COMMANDS = {
@@ -73,9 +75,13 @@ COMMANDS = {
 }
 
 
-@input_error
-def handler(command):
-    return COMMANDS[command]
+def handler(text):
+
+    for command in COMMANDS:
+        if text.lower().startswith(command):
+            return COMMANDS[command], text[len(command):].strip().split(" ")
+    
+    return no_command, None
 
 
 def main():
@@ -84,20 +90,13 @@ def main():
 
         user_input = input(">>> ")
 
-        if user_input in EXIT:
+        if user_input.lower() in EXIT:
             print("Good bye!")
             break
 
-        user_input = user_input.split(" ")
-
-        get_handler = handler(user_input[0].lower())
+        command, args = handler(user_input)
         
-        try:
-            print(get_handler(*user_input[1:]))
-        except TypeError:
-            print(get_handler)
-
-        print(contacts)
+        print(command(args))
 
 
 if __name__ == "__main__":
