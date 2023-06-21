@@ -1,5 +1,8 @@
+from data_structure import AddressBook, Record, Name, Phone
+
+
 EXIT = ["good bye", "close", "exit"]
-contacts = {}
+contacts = AddressBook()
 
 
 def input_error(func):
@@ -22,15 +25,34 @@ def hello(args):
 @input_error
 def add(args):
 
-    name = args[0]
+    name = Name(args[0])
     
-    if name in contacts:
+    if name.value in contacts:
         raise ValueError
     
-    phone_num = args[1]
-    contacts[name] = phone_num
+    record = Record(name)
+    
+    if len(args) > 1:
+        for arg in args[1:]:
+            phone_num = Phone(arg)
+            record.add_field(phone_num)
+
+    contacts.add_record(record)
 
     return "Сontact added successfully"
+
+
+@input_error
+def delete(args):
+
+    name = args[0]
+    
+    if name not in [key for key in contacts.keys()]:
+        raise ValueError
+
+    contacts.del_record(name)
+
+    return "Сontact delete successfully"
 
 
 @input_error
@@ -41,25 +63,88 @@ def change(args):
     if name not in contacts:
         raise ValueError
     
-    phone_num = args[1]
-    contacts[name] = phone_num
+    fields = []
+
+    if len(args) > 1:
+        fields = list(map(lambda arg: Phone(arg), args[1:]))
+
+    contacts.change_record(name, fields)
 
     return "Сontact changed successfully"
 
 
+def search(args):
+    return contacts.search_record(args)
+
+
+def show_all(args):
+
+    all = []
+
+    for name, record in contacts.items():
+
+        fields = "; ".join([field.value for field in record.fields])
+        all.append(f"{name}: {fields}")
+
+    return "\n".join(all)
+
+
 @input_error
-def phone(args):
+def add_fields(args):
+
+    name = args[0]
+    
+    if name not in contacts:
+        raise ValueError
+    else:
+        record = contacts[name]
+    
+    if len(args) > 1:
+        for arg in args[1:]:
+            phone_num = Phone(arg)
+            record.add_field(phone_num)
+
+    return "Fields added successfully"
+
+
+@input_error
+def delete_fields(args):
+
+    name = args[0]
+    
+    if name not in contacts:
+        raise ValueError
+    else:
+        record = contacts[name]
+    
+    if len(args) > 1:
+
+        for arg in args[1:]:
+            for phone in record.fields:
+                if arg == phone.value:
+                    record.del_field(phone)
+
+    else:
+        record.fields = []
+
+    return "Fields deleted successfully"
+
+
+@input_error
+def change_fields(args):
 
     name = args[0]
 
     if name not in contacts:
         raise ValueError
+    
+    if len(args) < 3:
+        raise IndexError
+    
+    old_field = args[1]
+    new_field = Phone(args[2])
 
-    return f"{name}: {contacts[name]}"
-
-
-def show_all(args):
-    return "\n".join([f"{name}: {phone}" for name, phone in contacts.items()])
+    return contacts[name].change_fields(old_field, new_field)
 
 
 def no_command(args):
@@ -69,9 +154,13 @@ def no_command(args):
 COMMANDS = {
     "hello": hello,
     "add": add,
+    "delete": delete,
     "change": change,
-    "phone": phone,
-    "show all": show_all
+    "search": search,
+    "show all": show_all,
+    "fields add": add_fields,
+    "fields delete": delete_fields,
+    "fields change": change_fields
 }
 
 
