@@ -34,8 +34,8 @@ def add(args):
     
     if len(args) > 1:
         for arg in args[1:]:
-            phone_num = Phone(arg)
-            record.add_field(phone_num)
+            phone = Phone(arg)
+            record.add_phone(phone)
 
     contacts.add_record(record)
 
@@ -63,12 +63,12 @@ def change(args):
     if name not in contacts:
         raise ValueError
     
-    fields = []
+    phones = []
 
     if len(args) > 1:
-        fields = list(map(lambda arg: Phone(arg), args[1:]))
+        phones = list(map(lambda arg: Phone(arg), args[1:]))
 
-    contacts.change_record(name, fields)
+    contacts.change_record(name, phones)
 
     return "Сontact changed successfully"
 
@@ -93,8 +93,8 @@ def show_all(args):
 
         for name in all_names:
 
-            fields = "; ".join([field.value for field in contacts[name].fields])
-            print(f"{name}: {fields}")
+            phones = "; ".join([phone.value for phone in contacts[name].phones])
+            print(f"{name}: {phones}")
 
         print(filler * filler_length)
 
@@ -106,8 +106,8 @@ def show_all(args):
 
             for name in names:
 
-                fields = "; ".join([field.value for field in contacts[name].fields])
-                print(f"{name}: {fields}")
+                phones = "; ".join([phone.value for phone in contacts[name].phones])
+                print(f"{name}: {phones}")
 
             print(filler * filler_length, input())
 
@@ -115,7 +115,7 @@ def show_all(args):
 
 
 @input_error
-def add_fields(args):
+def add_phones(args):
 
     name = args[0]
     
@@ -126,14 +126,14 @@ def add_fields(args):
     
     if len(args) > 1:
         for arg in args[1:]:
-            phone_num = Phone(arg)
-            record.add_field(phone_num)
+            phone = Phone(arg)
+            record.add_phone(phone)
 
-    return "Fields added successfully"
+    return "Phones added successfully"
 
 
 @input_error
-def delete_fields(args):
+def delete_phones(args):
 
     name = args[0]
     
@@ -145,18 +145,18 @@ def delete_fields(args):
     if len(args) > 1:
 
         for arg in args[1:]:
-            for phone in record.fields:
+            for phone in record.phones:
                 if arg == phone.value:
-                    record.del_field(phone)
+                    record.del_phone(phone)
 
     else:
-        record.fields = []
+        record.phones = []
 
-    return "Fields deleted successfully"
+    return "Phones deleted successfully"
 
 
 @input_error
-def change_fields(args):
+def change_phones(args):
 
     name = args[0]
 
@@ -166,10 +166,10 @@ def change_fields(args):
     if len(args) < 3:
         raise IndexError
     
-    old_field = args[1]
-    new_field = Phone(args[2])
+    old_phone = args[1]
+    new_phone = Phone(args[2])
 
-    return contacts[name].change_fields(old_field, new_field)
+    return contacts[name].change_phones(old_phone, new_phone)
 
 
 def no_command(args):
@@ -183,9 +183,9 @@ COMMANDS = {
     "change": change,
     "search": search,
     "show all": show_all,
-    "fields add": add_fields,
-    "fields delete": delete_fields,
-    "fields change": change_fields
+    "phones add": add_phones,
+    "phones delete": delete_phones,
+    "phones change": change_phones
 }
 
 

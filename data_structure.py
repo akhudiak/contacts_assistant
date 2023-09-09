@@ -9,29 +9,29 @@ class AddressBook(UserDict):
     def del_record(self, name):
         self.data.pop(name)
 
-    def change_record(self, name, fields):
+    def change_record(self, name, phones):
         
         record = self.data[name]
-        record.fields = []
-        record.ext_fields(fields)
+        record.phones = []
+        record.ext_phones(phones)
 
-    def search_record(self, fields):
+    def search_record(self, args):
 
-        name = fields[0]
+        name = args[0]
 
         if name not in self.data:
             return f"There is no contact with the name {name}"
         
-        contact_phones = [field.value for field in self.data[name].fields]
+        phones = [phone.value for phone in self.data[name].phones]
 
-        if len(fields) > 1:
-            for phone in fields[1:]:
-                if phone not in contact_phones:
+        if len(args) > 1:
+            for phone in args[1:]:
+                if phone not in phones:
                     return f"There is no contact {name} with the phone {phone}"
 
-        contact_phones = "; ".join(contact_phones)
+        phones = "; ".join(phones)
 
-        return f"{name}: {contact_phones}"
+        return f"{name}: {phones}"
     
     def iterator(self, n):
 
@@ -54,31 +54,31 @@ class Record:
 
     def __init__(self, name):
         self.name = name
-        self.fields = []
+        self.phones = []
 
-    def add_field(self, field):
-        self.fields.append(field)
+    def add_phone(self, phone):
+        self.phones.append(phone)
 
-    def ext_fields(self, fields):
-        self.fields.extend(fields)
+    def ext_phones(self, phones):
+        self.phones.extend(phones)
 
-    def del_field(self, field):
-        self.fields.remove(field)
+    def del_phone(self, phone):
+        self.phones.remove(phone)
 
-    def change_fields(self, old_field, new_field):
+    def change_phones(self, old_phone, new_phone):
         
-        for field in self.fields:
-            if field.value == old_field:
-                old_field = field
+        for phone in self.phones:
+            if phone.value == old_phone:
+                old_phone = phone
 
-        if isinstance(old_field, str):
-            return f"There is no such phone {old_field} in the contact with name {self.name.value}"
+        if isinstance(old_phone, str):
+            return f"There is no such phone {old_phone} in the contact with name {self.name.value}"
 
-        index = self.fields.index(old_field)
-        self.fields.pop(index)
-        self.fields.insert(index, new_field)
+        index = self.phones.index(old_phone)
+        self.phones.pop(index)
+        self.phones.insert(index, new_phone)
 
-        return "Fields changed successfully"
+        return "Phones changed successfully"
 
 
 class Field:
