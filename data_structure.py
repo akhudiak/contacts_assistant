@@ -32,6 +32,22 @@ class AddressBook(UserDict):
         contact_phones = "; ".join(contact_phones)
 
         return f"{name}: {contact_phones}"
+    
+    def iterator(self, n):
+
+        start_point = 0
+        list_data = list(self.data)
+
+        while True:
+
+            page = list_data[start_point:start_point + n]
+
+            if not page:
+                break
+
+            start_point += n
+
+            yield page
 
 
 class Record:

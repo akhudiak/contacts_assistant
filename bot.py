@@ -47,7 +47,7 @@ def delete(args):
 
     name = args[0]
     
-    if name not in [key for key in contacts.keys()]:
+    if name not in contacts:
         raise ValueError
 
     contacts.del_record(name)
@@ -79,14 +79,39 @@ def search(args):
 
 def show_all(args):
 
-    all = []
+    filler = "-"
+    filler_length = 30
 
-    for name, record in contacts.items():
+    print("Start\n" + filler * filler_length)
 
-        fields = "; ".join([field.value for field in record.fields])
-        all.append(f"{name}: {fields}")
+    try:
+        n = int(args[0])
 
-    return "\n".join(all)
+    except ValueError:
+
+        all_names = contacts
+
+        for name in all_names:
+
+            fields = "; ".join([field.value for field in contacts[name].fields])
+            print(f"{name}: {fields}")
+
+        print(filler * filler_length)
+
+    else:
+
+        all_names =  contacts.iterator(n)
+
+        for names in all_names:
+
+            for name in names:
+
+                fields = "; ".join([field.value for field in contacts[name].fields])
+                print(f"{name}: {fields}")
+
+            print(filler * filler_length, input())
+
+    return "End"
 
 
 @input_error
