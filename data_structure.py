@@ -13,12 +13,6 @@ class AddressBook(UserDict):
     def del_record(self, name):
         self.data.pop(name)
 
-    def change_record(self, name, phones):
-        
-        record = self.data[name]
-        record.phones = []
-        record.ext_phones(phones)
-
     def search_record(self, args):
 
         name = args[0]
@@ -63,9 +57,6 @@ class Record:
 
     def add_phone(self, phone):
         self.phones.append(phone)
-
-    def ext_phones(self, phones):
-        self.phones.extend(phones)
 
     def del_phone(self, phone):
         self.phones.remove(phone)

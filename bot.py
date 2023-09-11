@@ -71,24 +71,6 @@ def delete(args):
     return "Сontact delete successfully"
 
 
-@input_error
-def change(args):
-
-    name = args[0]
-
-    if name not in contacts:
-        raise ValueError
-    
-    phones = []
-
-    if len(args) > 1:
-        phones = list(map(lambda arg: Phone(arg), args[1:]))
-
-    contacts.change_record(name, phones)
-
-    return "Сontact changed successfully"
-
-
 def search(args):
     return contacts.search_record(args)
 
@@ -196,7 +178,6 @@ COMMANDS = {
     "hello": hello,
     "add": add,
     "delete": delete,
-    "change": change,
     "search": search,
     "show all": show_all,
     "phones add": add_phones,
