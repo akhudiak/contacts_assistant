@@ -24,6 +24,14 @@ def input_error(func):
     return wrapper
 
 
+def flag_split_data(args):
+    try:
+        flag, data = args.split("=")
+        return flag, data
+    except ValueError:
+        raise FlagError
+
+
 def hello(args):
     return "How can I help you?"
 
@@ -42,10 +50,7 @@ def add(args):
 
         for arg in args[1:]:
             
-            try:
-                flag, data = arg.split("=")
-            except ValueError:
-                raise FlagError
+            flag, data = flag_split_data(arg)
             
             if flag == "p":
                 phone = Phone(data)
