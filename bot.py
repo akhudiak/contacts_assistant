@@ -196,6 +196,17 @@ def change_phones(args):
     return contacts[name].change_phones(old_phone, new_phone)
 
 
+@input_error
+def days_to_birthday(args):
+    
+    name = args[0]
+
+    if name not in contacts:
+        raise ValueError
+    
+    return contacts[name].days_to_birthday()
+
+
 def no_command(args):
     return "Wrong command! Try again."
 
@@ -208,7 +219,8 @@ COMMANDS = {
     "show all": show_all,
     "phones add": add_phones,
     "phones delete": delete_phones,
-    "phones change": change_phones
+    "phones change": change_phones,
+    "days to birthday": days_to_birthday
 }
 
 

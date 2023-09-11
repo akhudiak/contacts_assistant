@@ -50,7 +50,7 @@ class Record:
                 old_phone = phone
 
         if isinstance(old_phone, str):
-            return f"There is no such phone {old_phone} in the contact with name {self.name.value}"
+            return f"There is no such phone {old_phone} in contacts with name {self.name.value}"
 
         index = self.phones.index(old_phone)
         self.phones.pop(index)
@@ -60,7 +60,7 @@ class Record:
 
     def days_to_birthday(self):
 
-        if not self.birthday.value: # Подумати чи потрібно тут .value
+        if not self.birthday:
             return "Birthday is not specified"
         
         current_date = datetime(datetime.now().year, datetime.now().month, datetime.now().day)
