@@ -12,24 +12,6 @@ class AddressBook(UserDict):
 
     def del_record(self, name):
         self.data.pop(name)
-
-    def search_record(self, args):
-
-        name = args[0]
-
-        if name not in self.data:
-            return f"There is no contact with the name {name}"
-        
-        phones = [phone.value for phone in self.data[name].phones]
-
-        if len(args) > 1:
-            for phone in args[1:]:
-                if phone not in phones:
-                    return f"There is no contact {name} with the phone {phone}"
-
-        phones = "; ".join(phones)
-
-        return f"{name}: {phones}"
     
     def iterator(self, n):
 

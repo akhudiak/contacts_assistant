@@ -77,7 +77,28 @@ def delete(args):
 
 
 def search(args):
-    return contacts.search_record(args)
+
+    name = args[0]
+
+    if name not in contacts:
+        return f"There is no contact with the name {name}"
+    
+    phones = [phone.value for phone in contacts[name].phones]
+
+    if len(args) > 1:
+
+        for arg in args[1:]:
+
+            flag, data = flag_split_data(arg)
+
+            if flag == "p":
+
+                if data not in phones:
+                    return f"There is no contact {name} with the phone {data}"
+
+    phones = "; ".join(phones)
+    
+    return f"{name}: {phones}"
 
 
 def show_all(args):
