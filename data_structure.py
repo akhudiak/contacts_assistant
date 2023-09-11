@@ -1,4 +1,8 @@
 from collections import UserDict
+from datetime import datetime
+from string import digits
+
+from exceptions import IncorrectPhone, IncorrectBirthday
 
 
 class AddressBook(UserDict):
@@ -52,8 +56,9 @@ class AddressBook(UserDict):
 
 class Record:
 
-    def __init__(self, name):
+    def __init__(self, name, birthday=None):
         self.name = name
+        self.birthday = birthday
         self.phones = []
 
     def add_phone(self, phone):
@@ -80,6 +85,22 @@ class Record:
 
         return "Phones changed successfully"
 
+    def days_to_birthday(self):
+
+        if not self.birthday.value: # Подумати чи потрібно тут .value
+            return "Birthday is not specified"
+        
+        current_date = datetime(datetime.now().year, datetime.now().month, datetime.now().day)
+        current_birthday = datetime(current_date.year, self.birthday.value.month, self.birthday.value.day)
+        
+        if current_date > current_birthday:
+            next_birthday = datetime(current_date.year + 1, current_birthday.month, current_birthday.day)
+        else:
+            next_birthday = current_birthday
+
+        days_to_next_birthday = (next_birthday - current_date).days
+        return f"There is {days_to_next_birthday} days to the next birthday of {self.name.value}"
+
 
 class Field:
 
@@ -92,4 +113,41 @@ class Name(Field):
 
 
 class Phone(Field):
-    pass
+
+    available_chars = digits + "+-() "
+
+    def __init__(self, value):
+        self.__value = None
+        self.value = value
+    
+    @property
+    def value(self):
+        return self.__value
+    
+    @value.setter
+    def value(self, value):
+
+        for ch in value:
+            if ch not in self.available_chars:
+                raise IncorrectPhone
+            
+        self.__value = value
+
+
+class Birthday(Field):
+    
+    def __init__(self, value):
+        self.__value = None
+        self.value = value
+
+    @property
+    def value(self):
+        return self.__value
+    
+    @value.setter
+    def value(self, value):
+
+        try:
+            self.__value = datetime.strptime(value, "%d.%m.%Y")
+        except ValueError:
+            raise IncorrectBirthday

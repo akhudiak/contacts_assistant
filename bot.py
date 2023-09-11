@@ -1,5 +1,5 @@
-from data_structure import AddressBook, Record, Name, Phone
-
+from data_structure import AddressBook, Record, Name, Phone, Birthday
+from exceptions import IncorrectPhone, IncorrectBirthday, FlagError
 
 EXIT = ["good bye", "close", "exit"]
 contacts = AddressBook()
@@ -11,9 +11,15 @@ def input_error(func):
         try:
             return func(args)
         except IndexError:
-            return "Give me all needed data."
+            return "Give me all needed data"
         except ValueError:
             return "Error in the contact name!"
+        except IncorrectPhone:
+            return "There is incorrect symbol in phone number"
+        except IncorrectBirthday:
+            return "Incorrect format of birthday. Must be dd.mm.yyyy"
+        except FlagError:
+            return "Error in flag format. Must be 'flag'='value'"
 
     return wrapper
 
@@ -33,9 +39,19 @@ def add(args):
     record = Record(name)
     
     if len(args) > 1:
+
         for arg in args[1:]:
-            phone = Phone(arg)
-            record.add_phone(phone)
+            
+            try:
+                flag, data = arg.split("=")
+            except ValueError:
+                raise FlagError
+            
+            if flag == "p":
+                phone = Phone(data)
+                record.add_phone(phone)
+            elif flag == "b":
+                record.birthday = Birthday(data)
 
     contacts.add_record(record)
 
