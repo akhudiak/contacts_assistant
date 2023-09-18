@@ -1,8 +1,14 @@
 from data_structure import AddressBook, Record, Name, Phone, Birthday
 from exceptions import IncorrectPhone, IncorrectBirthday, FlagError
 
+
 EXIT = ["good bye", "close", "exit"]
-contacts = AddressBook()
+FILE = "contacts.bin"
+
+try:
+    contacts = AddressBook.load_from_file(FILE)
+except FileNotFoundError:
+    contacts = AddressBook()
 
 
 def input_error(func):
@@ -104,7 +110,7 @@ def search(args):
 def show_all(args):
 
     filler = "-"
-    filler_length = 30
+    filler_length = 100
 
     print("Start\n" + filler * filler_length)
 
@@ -240,6 +246,7 @@ def main():
         user_input = input(">>> ")
 
         if user_input.lower() in EXIT:
+            contacts.save_to_file(FILE)
             print("Good bye!")
             break
 

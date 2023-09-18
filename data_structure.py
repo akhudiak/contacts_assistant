@@ -1,5 +1,6 @@
 from collections import UserDict
 from datetime import datetime
+import pickle
 from string import digits
 
 from exceptions import IncorrectPhone, IncorrectBirthday
@@ -29,6 +30,18 @@ class AddressBook(UserDict):
 
             yield page
 
+    def save_to_file(self, file_name):
+
+        with open(file_name, "wb") as fh:
+            pickle.dump(self, fh)
+
+    @staticmethod
+    def load_from_file(file_name):
+        
+        with open(file_name, "rb") as fh:
+            contacts = pickle.load(fh)
+        
+        return contacts
 
 class Record:
 
