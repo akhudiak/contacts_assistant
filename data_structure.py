@@ -99,7 +99,7 @@ class Record:
 
         return "{:<18}|{:<28}|".format(name, phones)
     
-    
+
 class Field:
 
     def __init__(self, value):

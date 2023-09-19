@@ -231,23 +231,3 @@ def handler(text):
             return COMMANDS[command], text[len(command):].strip().split(" ")
     
     return no_command, None
-
-
-def main():
-    
-    while True:
-
-        user_input = input(">>> ")
-
-        if user_input.lower() in EXIT:
-            contacts.save_to_file(FILE)
-            print("Good bye!")
-            break
-
-        command, args = handler(user_input)
-        
-        print(command(args))
-
-
-if __name__ == "__main__":
-    main()
