@@ -87,7 +87,19 @@ class Record:
         days_to_next_birthday = (next_birthday - current_date).days
         return f"There is {days_to_next_birthday} days to the next birthday of {self.name.value}"
 
+    def __str__(self):
 
+        name = self.name.value
+        phones = "; ".join([phone.value for phone in self.phones])
+        
+        if self.birthday:
+            
+            birthday = datetime.strftime(self.birthday.value, "%d.%m.%Y")
+            return "{:<18}|{:<28}|{:<10}".format(name, phones, birthday)
+
+        return "{:<18}|{:<28}|".format(name, phones)
+    
+    
 class Field:
 
     def __init__(self, value):

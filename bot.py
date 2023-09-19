@@ -84,27 +84,21 @@ def delete(args):
 
 def search(args):
 
-    name = args[0]
-
-    if name not in contacts:
-        return f"There is no contact with the name {name}"
-    
-    phones = [phone.value for phone in contacts[name].phones]
-
     if len(args) > 1:
+        return "Must be only 1 argument (search 'info')"
 
-        for arg in args[1:]:
+    user_input = args[0]
+    result = []
 
-            flag, data = flag_split_data(arg)
+    for contact in contacts.values():
 
-            if flag == "p":
+        if user_input in str(contact):
+            result.append(str(contact))
 
-                if data not in phones:
-                    return f"There is no contact {name} with the phone {data}"
-
-    phones = "; ".join(phones)
+    if not result:
+        return f"There is no such info: '{user_input}'"
     
-    return f"{name}: {phones}"
+    return "\n".join(result)
 
 
 def show_all(args):
