@@ -124,7 +124,7 @@ def show_all(args):
 
     else:
 
-        all_names =  contacts.iterator(n)
+        all_names = contacts.iterator(n)
 
         for names in all_names:
 

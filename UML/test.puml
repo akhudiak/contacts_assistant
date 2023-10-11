@@ -1,0 +1,73 @@
+@startuml data_structure
+
+class UserDict
+
+class AddressBook {
+    +add_record(record:Record)
+    +del_record(name:String)
+    +iterator(n:int) :String[0..*]
+    +save_to_file(file_name:String)
+    +{static}load_from_file(file_name:String) :AddressBook
+}
+
+class Record {
+    +name : Name
+    +birthday : Birthday
+    +phones : Phone
+    'Це змінні екземпляру класу. Чи правильно я їх записав?
+    
+    +add_phone(phone:Phone)
+    +del_phone(phone:Phone)
+    +change_phones(old_phone:String,new_phone:Phone) :String
+    +days_to_birthday() :String
+    +__str__() :String
+}
+
+class Field {
+    +value : String
+}
+
+class Name{
+}
+
+class Phone{
+    +available_chars : String
+    -value : String
+
+    'Як записати setter i getter?
+    +get_value() :String
+    +set_value(value:String)
+}
+
+class Birthday{
+    -value : String
+    +get_value() :String
+    +set_value(value:String)
+}
+
+'skinparam groupInheritance 2
+
+AddressBook --|> UserDict
+AddressBook "1..1" *-- "0..*" Record : "has"
+
+Record "1" *-- "1..1" Name : "has"
+Record "1" *-- "0..*" Phone : "has"
+Record "1" *-- "0..1" Birthday : "has"
+
+Field <|-up- Name
+Field <|-up- Phone
+Field <|-up- Birthday
+
+
+
+'class Exception
+'
+'class IncorrectPhone
+'class IncorrectBirthday
+'class FlagError
+'
+'Exception <|-- IncorrectPhone
+'Exception <|-- IncorrectBirthday
+'Exception <|-- FlagError
+
+@enduml
