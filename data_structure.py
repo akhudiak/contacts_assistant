@@ -14,19 +14,19 @@ class AddressBook(UserDict):
     def del_record(self, name):
         self.data.pop(name)
     
-    def iterator(self, n):
+    def iterator(self, contacts_per_page):
 
         start_point = 0
-        list_data = list(self.data)
+        data = list(self.data)
 
         while True:
 
-            page = list_data[start_point:start_point + n]
+            page = data[start_point:start_point + contacts_per_page]
 
             if not page:
                 break
 
-            start_point += n
+            start_point += contacts_per_page
 
             yield page
 
@@ -63,7 +63,7 @@ class Record:
                 old_phone = phone
 
         if isinstance(old_phone, str):
-            return f"There is no such phone {old_phone} in contacts with name {self.name.value}"
+            return f"{self.name.value} hasn't phone {old_phone}"
 
         index = self.phones.index(old_phone)
         self.phones.pop(index)
@@ -77,12 +77,12 @@ class Record:
             return "Birthday is not specified"
         
         current_date = datetime(datetime.now().year, datetime.now().month, datetime.now().day)
-        current_birthday = datetime(current_date.year, self.birthday.value.month, self.birthday.value.day)
+        current_year_birthday = datetime(current_date.year, self.birthday.value.month, self.birthday.value.day)
         
-        if current_date > current_birthday:
-            next_birthday = datetime(current_date.year + 1, current_birthday.month, current_birthday.day)
+        if current_date > current_year_birthday:
+            next_birthday = datetime(current_date.year + 1, current_year_birthday.month, current_year_birthday.day)
         else:
-            next_birthday = current_birthday
+            next_birthday = current_year_birthday
 
         days_to_next_birthday = (next_birthday - current_date).days
         return f"There is {days_to_next_birthday} days to the next birthday of {self.name.value}"

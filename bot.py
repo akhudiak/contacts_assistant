@@ -30,9 +30,9 @@ def input_error(func):
     return wrapper
 
 
-def flag_split_data(args):
+def flag_split_data(arg):
     try:
-        flag, data = args.split("=")
+        flag, data = arg.split("=")
         return flag, data
     except ValueError:
         raise FlagError
@@ -43,7 +43,7 @@ def hello(args):
 
 
 @input_error
-def add(args):
+def add_contact(args):
 
     name = Name(args[0])
     
@@ -70,7 +70,7 @@ def add(args):
 
 
 @input_error
-def delete(args):
+def delete_contact(args):
 
     name = args[0]
     
@@ -82,7 +82,7 @@ def delete(args):
     return "Сontact delete successfully"
 
 
-def search(args):
+def search_contact(args):
 
     if len(args) > 1:
         return "Must be only 1 argument (search 'info')"
@@ -109,13 +109,13 @@ def show_all(args):
     print("Start\n" + filler * filler_length)
 
     try:
-        n = int(args[0])
+        contacts_per_page = int(args[0])
 
     except ValueError:
 
-        all_names = contacts
+        names = contacts
 
-        for name in all_names:
+        for name in names:
 
             phones = "; ".join([phone.value for phone in contacts[name].phones])
             print(f"{name}: {phones}")
@@ -124,9 +124,9 @@ def show_all(args):
 
     else:
 
-        all_names = contacts.iterator(n)
+        names_iterator = contacts.iterator(contacts_per_page)
 
-        for names in all_names:
+        for names in names_iterator:
 
             for name in names:
 
@@ -152,7 +152,7 @@ def add_phones(args):
         for arg in args[1:]:
             phone = Phone(arg)
             record.add_phone(phone)
-
+    # якщо вказане тільки ім'я, то телефони не додаються і виводиться, що телефони були додані
     return "Phones added successfully"
 
 
@@ -207,15 +207,15 @@ def days_to_birthday(args):
     return contacts[name].days_to_birthday()
 
 
-def no_command(args):
+def wrong_command(args):
     return "Wrong command! Try again."
 
 
 COMMANDS = {
     "hello": hello,
-    "add": add,
-    "delete": delete,
-    "search": search,
+    "add": add_contact,
+    "delete": delete_contact,
+    "search": search_contact,
     "show all": show_all,
     "phones add": add_phones,
     "phones delete": delete_phones,
@@ -230,4 +230,4 @@ def handler(text):
         if text.lower().startswith(command):
             return COMMANDS[command], text[len(command):].strip().split(" ")
     
-    return no_command, None
+    return wrong_command, None
