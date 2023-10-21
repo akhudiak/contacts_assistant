@@ -66,7 +66,7 @@ def add_contact(args):
 
     contacts.add_record(record)
 
-    return "Сontact added successfully"
+    return "Contact added successfully"
 
 
 @input_error
@@ -79,7 +79,7 @@ def delete_contact(args):
 
     contacts.del_record(name)
 
-    return "Сontact delete successfully"
+    return "Contact delete successfully"
 
 
 def search_contact(args):
