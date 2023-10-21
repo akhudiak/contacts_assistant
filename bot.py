@@ -79,7 +79,7 @@ def delete_contact(args):
 
     contacts.del_record(name)
 
-    return "Сontact delete successfully"
+    return "Contact delete successfully"
 
 
 def search_contact(args):
