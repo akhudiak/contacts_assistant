@@ -1,5 +1,5 @@
 from data_structure import AddressBook, Record, Name, Phone, Birthday
-from exceptions import IncorrectPhone, IncorrectBirthday, FlagError
+from exceptions import IncorrectPhone, IncorrectBirthday, FlagError, SearchError, SearchArgumentCountError
 
 
 EXIT = ["good bye", "close", "exit"]
@@ -26,6 +26,10 @@ def input_error(func):
             return "Incorrect format of birthday. Must be dd.mm.yyyy"
         except FlagError:
             return "Error in flag format. Must be 'flag'='value'"
+        except SearchError as error:
+            return error
+        except SearchArgumentCountError:
+            return "Must be only 1 argument (search 'info')"
 
     return wrapper
 
@@ -82,10 +86,11 @@ def delete_contact(args):
     return "Contact delete successfully"
 
 
-def search_contact(args):
+@input_error
+def search_info(args):
 
     if len(args) > 1:
-        return "Must be only 1 argument (search 'info')"
+        raise SearchArgumentCountError
 
     user_input = args[0]
     result = []
@@ -96,7 +101,7 @@ def search_contact(args):
             result.append(str(contact))
 
     if not result:
-        return f"There is no such info: '{user_input}'"
+        raise SearchError(user_input)
     
     return "\n".join(result)
 
@@ -215,7 +220,7 @@ COMMANDS = {
     "hello": hello,
     "add": add_contact,
     "delete": delete_contact,
-    "search": search_contact,
+    "search": search_info,
     "show all": show_all,
     "phones add": add_phones,
     "phones delete": delete_phones,
